@@ -55,9 +55,11 @@ public class MedicalReportService {
         return medicalReportRepository.findAllByDateBetween(startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
     }
 
-    public void updateMedicalReport(MedicalReportPOJO newMedicalReport) throws LogNotFoundException, RoleException {
+    public void updateMedicalReport(Long id, MedicalReportPOJO newMedicalReport) throws LogNotFoundException, RoleException {
 
-        log.info(format("updateMedicalReport method for id=%d", newMedicalReport.getId()));
+        log.info(format("updateMedicalReport method for id=%d", id));
+
+        newMedicalReport.setId(id);
 
         Optional<MedicalReportPOJO> medicalReport = medicalReportRepository.findById(newMedicalReport.getId());
         if (medicalReport.isEmpty()) {

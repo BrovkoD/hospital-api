@@ -37,26 +37,26 @@ public class AppointmentController {
 
     @PreAuthorize("hasAuthority('admin') or hasAuthority('doctor')")
     @GetMapping("/appointments")
-    public ResponseEntity<List<AppointmentPOJO>> getAppointmentsByDate (@RequestParam @DateTimeFormat(iso = DATE) LocalDate startDate,
-                                                                        @RequestParam(required = false) @DateTimeFormat(iso = DATE) LocalDate endDate) {
+    public ResponseEntity<List<AppointmentPOJO>> getAppointmentsByDate (@RequestParam("start") @DateTimeFormat(iso = DATE) LocalDate startDate,
+                                                                        @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DATE) LocalDate endDate) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByDate(startDate, endDate));
     }
 
-    @PutMapping("/updateAppointment/{id}")
+    @PutMapping("/appointments/{id}")
     public ResponseEntity<Void> updateAppointment(@PathVariable Long id,
                                                   @RequestBody AppointmentPOJO newAppointment) throws LogNotFoundException, RoleException {
         appointmentService.updateAppointment(id, newAppointment);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/newAppointment")
+    @PostMapping("/appointments")
     public ResponseEntity<Void> createAppointment(@RequestBody AppointmentPOJO newAppointment) throws LogNotFoundException, RoleException {
         Long id = appointmentService.createAppointment(newAppointment);
         return ResponseEntity.created(URI.create("/newAppointment/" + id)).build();
     }
 
     @PreAuthorize("hasAuthority('admin') or hasAuthority('doctor')")
-    @DeleteMapping("/deleteAppointment/{id}")
+    @DeleteMapping("/appointments/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) throws LogNotFoundException {
         appointmentService.deleteAppointment(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

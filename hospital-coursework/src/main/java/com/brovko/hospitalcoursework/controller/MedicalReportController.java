@@ -30,34 +30,35 @@ public class MedicalReportController {
     }
 
     @PreAuthorize("hasAuthority('admin') or hasAuthority('doctor')")
-    @GetMapping("/medicalReports/{id}")
+    @GetMapping("/medical-reports/{id}")
     public ResponseEntity<MedicalReportPOJO> getMedicalReportById (@PathVariable Long id) throws LogNotFoundException {
         return ResponseEntity.ok(medicalReportService.getMedicalReportById(id));
     }
 
     @PreAuthorize("hasAuthority('admin') or hasAuthority('doctor')")
-    @GetMapping("/medicalReports")
-    public ResponseEntity<List<MedicalReportPOJO>> getMedicalReportsByDate (@RequestParam @DateTimeFormat(iso = DATE) LocalDate startDate,
-                                                                            @RequestParam(required = false) @DateTimeFormat(iso = DATE) LocalDate endDate) {
+    @GetMapping("/medical-reports")
+    public ResponseEntity<List<MedicalReportPOJO>> getMedicalReportsByDate (@RequestParam("start") @DateTimeFormat(iso = DATE) LocalDate startDate,
+                                                                            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DATE) LocalDate endDate) {
         return ResponseEntity.ok(medicalReportService.getMedicalReportsByDate(startDate, endDate));
     }
 
     @PreAuthorize("hasAuthority('admin') or hasAuthority('doctor')")
-    @PutMapping("/updateMedicalReport")
-    public ResponseEntity<Void> updateMedicalReport(@RequestBody MedicalReportPOJO newMedicalReport) throws LogNotFoundException, RoleException {
-        medicalReportService.updateMedicalReport(newMedicalReport);
+    @PutMapping("/medical-reports/{id}")
+    public ResponseEntity<Void> updateMedicalReport(@PathVariable Long id,
+                                                    @RequestBody MedicalReportPOJO newMedicalReport) throws LogNotFoundException, RoleException {
+        medicalReportService.updateMedicalReport(id, newMedicalReport);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasAuthority('admin') or hasAuthority('doctor')")
-    @PostMapping("/newMedicalReport")
+    @PostMapping("/medical-reports")
     public ResponseEntity<Void> createMedicalReport(@RequestBody MedicalReportPOJO newMedicalReport) throws LogNotFoundException, RoleException {
         Long id = medicalReportService.createMedicalReport(newMedicalReport);
         return ResponseEntity.created(URI.create("/newMedicalReport/" + id)).build();
     }
 
     @PreAuthorize("hasAuthority('admin') or hasAuthority('doctor')")
-    @DeleteMapping("/deleteMedicalReport/{id}")
+    @DeleteMapping("/medical-reports/{id}")
     public ResponseEntity<Void> deleteMedicalReport(@PathVariable Long id) throws LogNotFoundException {
         medicalReportService.deleteMedicalReport(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

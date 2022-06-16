@@ -55,14 +55,14 @@ public class AppointmentService {
             endDate = startDate;
         }
 
-        log.info(format("getAppointmentsByDate method for date between %s and %s", startDate.toString(), endDate.toString()));
+        log.info(format("getAppointmentsByDate method for date between %s and %s", startDate, endDate));
 
         return appointmentRepository.findAllByAppointmentTimeBetween(startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
     }
 
     public void updateAppointment(Long id, AppointmentPOJO newAppointment) throws LogNotFoundException, RoleException {
 
-        log.info(format("updateAppointment method for id=%d", newAppointment.getId()));
+        log.info(format("updateAppointment method for id=%d", id));
 
         newAppointment.setId(id);
 
